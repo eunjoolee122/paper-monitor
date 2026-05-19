@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 데이터 (개인 DB, 다운로드 PDF 등)
+data/*.sqlite
+data/*.sqlite-journal
+data/state.json
+/tmp/
+
+# 사용자별 노트는 Obsidian vault에 보관하면 됨 — 리포에는 안 넣음
+notes/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

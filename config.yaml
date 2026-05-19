@@ -1,0 +1,18 @@
+# 사용자 환경 설정
+# 처음 한 번만 수정하면 됨
+
+# Obsidian vault 안의 노트 폴더 절대경로
+# 예: /Users/yourname/Documents/ObsidianVault/Papers
+obsidian_notes_dir: "./notes"
+
+# SQLite DB 경로 (그대로 두면 OK)
+db_path: "./data/papers.sqlite"
+
+# Triage 점수 기준 (이 값 이상이면 본문 요약 대상)
+summarize_threshold: 3
+
+# 동시 PDF 다운로드 제한
+max_concurrent_downloads: 3
+
+# 마지막 fetch 시각을 기록할 파일 (incremental fetch용)
+state_file: "./data/state.json"

@@ -1,0 +1,71 @@
+# Paper monitor query configuration
+# 자유롭게 수정하세요. 키워드는 처음에 광범위하게 잡고 triage 단계에서 거르는 게 효율적.
+
+# 검색 기간 (백필용)
+date_range:
+  start: "2023-01-01"
+  end: null  # null이면 오늘까지
+
+# 코어 키워드: OR로 검색됨. 각 항목은 그대로 API에 들어가니까 정확한 문구를 씀.
+# small molecule + generation + lead optimization 포커스
+core_keywords:
+  # --- 분자 생성 (de novo / structure-based) ---
+  - "molecular generation"
+  - "de novo molecular design"
+  - "de novo drug design"
+  - "generative chemistry"
+  - "structure-based drug design"
+  - "structure-based generative"
+  - "pocket-conditioned generation"
+  - "target-aware molecule generation"
+  - "3D molecule generation"
+  - "ligand generation"
+  - "scaffold hopping"
+  - "scaffold-constrained generation"
+  - "linker design"
+  - "fragment-based drug design"
+  - "PROTAC design"
+
+  # --- Lead optimization ---
+  - "lead optimization"
+  - "multi-parameter optimization molecule"
+  - "molecular property optimization"
+  - "bioisosteric replacement"
+  - "matched molecular pairs"
+  - "free energy perturbation"
+  - "active learning chemistry"
+  - "Bayesian optimization molecule"
+  - "selectivity optimization"
+
+  # --- 지원 기술 (lead opt에 필요한 predictor들) ---
+  - "binding affinity prediction"
+  - "molecular docking deep learning"
+  - "ADMET prediction"
+  - "drug-target interaction"
+  - "molecular property prediction"
+  - "retrosynthesis prediction"
+  - "synthesizability"
+  - "molecular representation learning"
+
+# 제외 키워드: 제목+abstract에 포함되면 자동 스킵
+# 본인 관심사에 맞지 않는 분야 컷
+exclude_keywords:
+  - "antibody design"
+  - "protein language model"
+  - "AlphaFold"  # 너무 많이 나옴 - 필요하면 빼세요
+  - "mRNA"
+  - "single-cell"
+  - "CRISPR"
+
+# arXiv 카테고리 (참고: q-bio.BM=Biomolecules, q-bio.QM=Quantitative Methods, cs.LG=Machine Learning)
+arxiv_categories:
+  - "q-bio.BM"
+  - "q-bio.QM"
+  - "cs.LG"
+  - "physics.chem-ph"
+
+# fetcher별 페이지당 최대 결과 (백필용)
+limits:
+  arxiv_per_keyword: 100
+  chemrxiv_per_keyword: 50
+  europepmc_per_keyword: 100
