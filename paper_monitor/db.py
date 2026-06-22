@@ -32,6 +32,10 @@ CREATE TABLE IF NOT EXISTS papers (
     note_path       TEXT,                      -- Obsidian note 상대경로
     summarized_at   TEXT,
 
+    -- 한글 abstract 요약 (keyword 인덱스용 가벼운 요약)
+    kr_summary       TEXT,
+    kr_summarized_at TEXT,
+
     -- 워크플로우
     status          TEXT NOT NULL DEFAULT 'new'  -- 'new' | 'triaged' | 'summarized' | 'skipped'
 );
@@ -83,6 +87,15 @@ def connect(db_path: str | Path) -> Iterator[sqlite3.Connection]:
 def init_db(db_path: str | Path) -> None:
     with connect(db_path) as conn:
         conn.executescript(SCHEMA)
+        # 기존 DB에는 ALTER로 컬럼 추가 (idempotent)
+        for stmt in (
+            "ALTER TABLE papers ADD COLUMN kr_summary TEXT",
+            "ALTER TABLE papers ADD COLUMN kr_summarized_at TEXT",
+        ):
+            try:
+                conn.execute(stmt)
+            except sqlite3.OperationalError:
+                pass  # 이미 존재
 
 
 def upsert_paper(conn: sqlite3.Connection, p: Paper, fetched_at: str) -> bool:
@@ -167,6 +180,20 @@ def update_score(
             WHERE id = ?
             """,
             (score, reason, triaged_at, new_status, paper_id),
+        )
+
+
+def save_kr_summary(
+    db_path: str | Path, paper_id: str, kr_summary: str, kr_summarized_at: str
+) -> None:
+    with connect(db_path) as conn:
+        conn.execute(
+            """
+            UPDATE papers
+            SET kr_summary = ?, kr_summarized_at = ?
+            WHERE id = ?
+            """,
+            (kr_summary, kr_summarized_at, paper_id),
         )
 
 
