@@ -2,3 +2,6 @@ requests>=2.31.0
 pyyaml>=6.0
 feedparser>=6.0.10
 python-dateutil>=2.8.2
+arxiv>=2.1.0
+kagglehub>=0.3.0
+tqdm>=4.66.0
