@@ -47,6 +47,21 @@ core_keywords:
   - "synthesizability"
   - "molecular representation learning"
 
+  # --- 표현 변형 보강 (2026-05 추가) ---
+  # 어순/품사 변형으로 엄격 매칭이 놓쳤던 고확신 동의어. drug design/molecular design
+  # 같은 광범위 문구는 소재·양자화학 논문 혼입이 커서 일부러 제외함.
+  - "molecule generation"
+  - "generating molecules"
+  - "generation of molecules"
+  - "small molecule generation"
+  - "compound generation"
+  - "drug generation"
+  - "molecular generative model"
+  - "molecule design"
+  - "ligand design"
+  - "molecular optimization"
+  - "molecule optimization"
+
 # 제외 키워드: 제목+abstract에 포함되면 자동 스킵
 # 본인 관심사에 맞지 않는 분야 컷
 exclude_keywords:
@@ -56,6 +71,11 @@ exclude_keywords:
   - "mRNA"
   - "single-cell"
   - "CRISPR"
+  # 질량분석 스펙트럼에서 분자 구조 생성(de novo structure elucidation)은 관심사 밖 —
+  # molecule generation 키워드에 다수 혼입되어 제외. 단어경계 매칭이라 변형 모두 명시.
+  - "mass spectra"
+  - "mass spectrum"
+  - "mass spectrometry"
 
 # arXiv 카테고리 (참고: q-bio.BM=Biomolecules, q-bio.QM=Quantitative Methods, cs.LG=Machine Learning)
 arxiv_categories:

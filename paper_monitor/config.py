@@ -11,11 +11,11 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 def load_config(path: str | Path | None = None) -> dict:
     path = Path(path) if path else REPO_ROOT / "config.yaml"
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
 def load_queries(path: str | Path | None = None) -> dict:
     path = Path(path) if path else REPO_ROOT / "queries.yaml"
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         return yaml.safe_load(f)

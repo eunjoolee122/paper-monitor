@@ -5,14 +5,14 @@
 # 예: /Users/yourname/Documents/ObsidianVault/Papers
 obsidian_notes_dir: "./notes"
 
-# SQLite DB 경로 (그대로 두면 OK)
-db_path: "./data/papers.sqlite"
+# SQLite DB 경로 — OneDrive 동기화 충돌 방지를 위해 D 드라이브(동기화 안 됨)에 둠
+db_path: "D:/dev/paper-monitor-data/papers.sqlite"
 
-# Triage 점수 기준 (이 값 이상이면 본문 요약 대상)
-summarize_threshold: 3
+# Triage 점수 기준 (이 값 이상이면 한글요약·본문요약 대상)
+summarize_threshold: 4
 
 # 동시 PDF 다운로드 제한
 max_concurrent_downloads: 3
 
 # 마지막 fetch 시각을 기록할 파일 (incremental fetch용)
-state_file: "./data/state.json"
+state_file: "D:/dev/paper-monitor-data/state.json"
