@@ -28,7 +28,8 @@ if (-not $claude) {
 
 # 무인 실행: 권한 프롬프트로 멈추지 않도록 함. (개인 로컬 자동화 — 신뢰 환경)
 # 더 좁히려면: --permission-mode dontAsk --allowedTools "Bash,Read,Write,Edit"
-& $claude -p "/routine" --dangerously-skip-permissions 2>&1 |
+# $null 파이프로 stdin을 즉시 닫아 "no stdin data" 3초 대기 회피
+$null | & $claude -p "/routine" --dangerously-skip-permissions 2>&1 |
     Out-File -FilePath $log -Append -Encoding utf8
 
 "[{0}] routine 종료 (exit={1})" -f (Get-Date), $LASTEXITCODE | Out-File -FilePath $log -Append -Encoding utf8
