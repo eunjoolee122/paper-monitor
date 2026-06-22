@@ -6,6 +6,13 @@
 
 # 네이티브 파이썬/CLI의 stderr(진행바·경고)에 런처가 중단되지 않도록 Continue
 $ErrorActionPreference = 'Continue'
+
+# 로그 한글 깨짐 방지: 콘솔/파이썬 출력 인코딩을 UTF-8로
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
+$env:PYTHONIOENCODING = 'utf-8'
+$env:PYTHONUTF8 = '1'
+
 $repo   = 'C:\Users\230016\OneDrive\claude\paper-monitor'
 $logdir = 'D:\dev\paper-monitor-data\routine-logs'   # OneDrive 밖(동기화 충돌 방지)
 New-Item -ItemType Directory -Force -Path $logdir | Out-Null

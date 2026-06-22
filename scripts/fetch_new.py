@@ -46,6 +46,13 @@ def main() -> None:
     fetched_at = datetime.utcnow().isoformat(timespec="seconds") + "Z"
     n_new = 0
 
+    # 소스별 config 키 — 해당 limit이 0이면 그 소스는 건너뛴다(비활성).
+    limit_keys = {
+        "arxiv": "arxiv_per_keyword",
+        "chemrxiv": "chemrxiv_per_keyword",
+        "europepmc": "europepmc_per_keyword",
+    }
+
     for name, fetcher_call in [
         (
             "arxiv",
@@ -76,6 +83,9 @@ def main() -> None:
             ),
         ),
     ]:
+        if limits.get(limit_keys[name], 0) <= 0:
+            print(f"\n=== {name} === (limit 0 — 비활성, 스킵)")
+            continue
         print(f"\n=== {name} ===")
         with connect(db_path) as conn:
             for paper in fetcher_call():

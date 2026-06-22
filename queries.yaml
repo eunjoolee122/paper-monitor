@@ -87,5 +87,5 @@ arxiv_categories:
 # fetcher별 페이지당 최대 결과 (백필용)
 limits:
   arxiv_per_keyword: 100
-  chemrxiv_per_keyword: 50
+  chemrxiv_per_keyword: 0    # chemRxiv public-api 엔드포인트가 404(엔드포인트 변경) — 비활성. fetcher 고치면 복구.
   europepmc_per_keyword: 100
