@@ -4,7 +4,8 @@
 #   schtasks /Create /TN "PaperMonitor Weekly" /SC WEEKLY /D MON /ST 08:00 /F ^
 #     /TR "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\Users\230016\OneDrive\claude\paper-monitor\run-routine.ps1\""
 
-$ErrorActionPreference = 'Stop'
+# 네이티브 파이썬/CLI의 stderr(진행바·경고)에 런처가 중단되지 않도록 Continue
+$ErrorActionPreference = 'Continue'
 $repo   = 'C:\Users\230016\OneDrive\claude\paper-monitor'
 $logdir = 'D:\dev\paper-monitor-data\routine-logs'   # OneDrive 밖(동기화 충돌 방지)
 New-Item -ItemType Directory -Force -Path $logdir | Out-Null
@@ -26,6 +27,18 @@ if (-not $claude) {
 
 "[{0}] routine 시작 (claude: {1})" -f (Get-Date), $claude | Out-File -FilePath $log -Encoding utf8
 
+# === 1단계: 신규 fetch (순수 파이썬, 키워드별 rate-limit으로 수 분 소요) ===
+# claude 도구 타임아웃/백그라운드 제약을 피하려 claude 밖에서 직접 실행한다.
+$py = Join-Path $repo '.venv\Scripts\python.exe'
+if (Test-Path $py) {
+    "[{0}] fetch_new 시작" -f (Get-Date) | Out-File -FilePath $log -Append -Encoding utf8
+    $null | & $py scripts\fetch_new.py 2>&1 | Out-File -FilePath $log -Append -Encoding utf8
+    "[{0}] fetch_new 종료 (exit={1})" -f (Get-Date), $LASTEXITCODE | Out-File -FilePath $log -Append -Encoding utf8
+} else {
+    "[{0}] venv python 없음 ({1}) — fetch 스킵" -f (Get-Date), $py | Out-File -FilePath $log -Append -Encoding utf8
+}
+
+# === 2단계: 큐레이션(triage→한글요약→인덱스)은 claude /routine이 수행 ===
 # 무인 실행: 권한 프롬프트로 멈추지 않도록 함. (개인 로컬 자동화 — 신뢰 환경)
 # 더 좁히려면: --permission-mode dontAsk --allowedTools "Bash,Read,Write,Edit"
 # $null 파이프로 stdin을 즉시 닫아 "no stdin data" 3초 대기 회피
