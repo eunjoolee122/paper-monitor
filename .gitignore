@@ -21,3 +21,10 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+
+# Claude Code 로컬 권한 설정 (개인별)
+.claude/settings.local.json
+
+# 작업용 임시 산출물
+_pdf/
+_*.json
