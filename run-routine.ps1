@@ -1,0 +1,34 @@
+# paper-monitor 주간 무인 루틴 런처 (Windows Task Scheduler에서 호출)
+# 로컬 데이터(D: DB, OneDrive vault)에 접근해야 하므로 이 PC에서 실행한다.
+# 등록 예:
+#   schtasks /Create /TN "PaperMonitor Weekly" /SC WEEKLY /D MON /ST 08:00 /F ^
+#     /TR "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\Users\230016\OneDrive\claude\paper-monitor\run-routine.ps1\""
+
+$ErrorActionPreference = 'Stop'
+$repo   = 'C:\Users\230016\OneDrive\claude\paper-monitor'
+$logdir = 'D:\dev\paper-monitor-data\routine-logs'   # OneDrive 밖(동기화 충돌 방지)
+New-Item -ItemType Directory -Force -Path $logdir | Out-Null
+$log = Join-Path $logdir ("routine_{0}.log" -f (Get-Date -Format 'yyyy-MM-dd_HHmmss'))
+
+Set-Location $repo
+
+# claude CLI 경로 확인 (Task Scheduler는 축소된 PATH로 실행될 수 있음)
+$claude = (Get-Command claude -ErrorAction SilentlyContinue).Source
+if (-not $claude) {
+    # 네이티브 설치 기본 경로 폴백
+    $fallback = Join-Path $env:USERPROFILE '.local\bin\claude.exe'
+    if (Test-Path $fallback) { $claude = $fallback }
+}
+if (-not $claude) {
+    "[{0}] claude CLI를 찾지 못함. 설치 후 PATH 또는 이 스크립트의 경로를 확인하세요." -f (Get-Date) | Out-File -FilePath $log -Encoding utf8
+    exit 1
+}
+
+"[{0}] routine 시작 (claude: {1})" -f (Get-Date), $claude | Out-File -FilePath $log -Encoding utf8
+
+# 무인 실행: 권한 프롬프트로 멈추지 않도록 함. (개인 로컬 자동화 — 신뢰 환경)
+# 더 좁히려면: --permission-mode dontAsk --allowedTools "Bash,Read,Write,Edit"
+& $claude -p "/routine" --dangerously-skip-permissions 2>&1 |
+    Out-File -FilePath $log -Append -Encoding utf8
+
+"[{0}] routine 종료 (exit={1})" -f (Get-Date), $LASTEXITCODE | Out-File -FilePath $log -Append -Encoding utf8
