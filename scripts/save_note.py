@@ -29,6 +29,8 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--id", required=True)
     ap.add_argument("--file", help="노트 본문 파일 경로 (없으면 stdin)")
+    ap.add_argument("--outdir", help="저장 폴더 (기본은 config의 obsidian_notes_dir). "
+                                     "실제 Obsidian vault에 직접 저장할 때 사용.")
     args = ap.parse_args()
 
     cfg = load_config()
@@ -42,7 +44,8 @@ def main() -> None:
     else:
         content = sys.stdin.read()
 
-    notes_dir = Path(cfg["obsidian_notes_dir"]).expanduser()
+    notes_dir = Path(args.outdir).expanduser() if args.outdir \
+        else Path(cfg["obsidian_notes_dir"]).expanduser()
     notes_dir.mkdir(parents=True, exist_ok=True)
 
     # 파일명: YYYY-MM-DD_<id>_<title-slug>.md
